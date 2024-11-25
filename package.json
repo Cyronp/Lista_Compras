@@ -1,0 +1,17 @@
+{
+  "name": "lista_compras",
+  "version": "1.0.0",
+  "description": "Trabalho final do segundo semestre em desenvolvimento web, feito na faculdade univille em engenharia de software.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node assets/js/express.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "sqlite3": "^5.1.7",
+    "cors": "^2.8.5"
+  }
+}
