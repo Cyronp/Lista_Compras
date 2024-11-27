@@ -11,9 +11,9 @@ app.use(express.static(path.join(__dirname, '../../')));
 
 const db = new sqlite3.Database('./itemsdb.sqlite', (err) => {
   if (err) {
-    console.error('Error connecting to SQLite:', err.message);
+    console.error('Ocorreu um erro ao conectar ao Banco de dados:', err.message);
   } else {
-    console.log('Connected to SQLite database.');
+    console.log('Conexão foi realizada com sucesso.');
   }
 });
 
@@ -21,12 +21,12 @@ db.run(`
   CREATE TABLE IF NOT EXISTS items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     item TEXT NOT NULL,
-    quantity REAL CHECK(quantity >= 0),
-    createdAt TEXT DEFAULT CURRENT_TIMESTAMP
+    quantidade REAL CHECK(quantidade >= 0),
+    criadoEm TEXT DEFAULT CURRENT_TIMESTAMP
   )
 `, (err) => {
   if (err) {
-    console.error('Error creating table:', err.message);
+    console.error('Ocorreu um erro ao criar a tabela.', err.message);
   }
 });
 
@@ -44,13 +44,13 @@ app.get('/api/items', (req, res) => {
 
 // Adicionar um item
 app.post('/api/items', (req, res) => {
-  const { item, quantity } = req.body;
-  const query = `INSERT INTO items (item, quantity) VALUES (?, ?)`;
-  db.run(query, [item, quantity], function(err) {
+  const { item, quantidade } = req.body;
+  const query = `INSERT INTO items (item, quantidade) VALUES (?, ?)`;
+  db.run(query, [item, quantidade], function(err) {
     if (err) {
       res.status(500).json({ message: err.message });
     } else {
-      res.status(201).json({ id: this.lastID, item, quantity });
+      res.status(201).json({ id: this.lastID, item, quantidade });
     }
   });
 });
@@ -63,7 +63,7 @@ app.delete('/api/items/:id', (req, res) => {
     if (err) {
       res.status(500).json({ message: err.message });
     } else {
-      res.status(200).json({ message: 'Item removed successfully' });
+      res.status(200).json({ message: 'Item removido com sucesso' });
     }
   });
 });
@@ -71,18 +71,18 @@ app.delete('/api/items/:id', (req, res) => {
 // Atualizar um item
 app.patch('/api/items/:id', (req, res) => {
   const { id } = req.params;
-  const { item, quantity } = req.body;
+  const { item, quantidade } = req.body;
   
-  const query = `UPDATE items SET item = ?, quantity = ? WHERE id = ?`;
-  db.run(query, [item, quantity, id], function (err) {
+  const query = `UPDATE items SET item = ?, quantidade = ? WHERE id = ?`;
+  db.run(query, [item, quantidade, id], function (err) {
     if (err) {
       res.status(500).json({ message: err.message });
     } else {
-      res.status(200).json({ message: 'Item updated successfully' });
+      res.status(200).json({ message: 'Item atualizado com sucesso' });
     }
   });
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Servidor esta rodando em: ${PORT}`);
 });

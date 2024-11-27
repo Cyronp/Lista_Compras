@@ -16,6 +16,7 @@
 <main>
     <section class="fora">
       <input type="text" id="itens" placeholder="Adicione um item..." />
+      <input type="number" name="Quantidade" id="quantity">
       <button id="adicionar">Adicionar</button>
     </section>
 
@@ -33,7 +34,16 @@
     <p>Quantidade:</p>
     <h2></h2>
     <button id="removeItem" class="modal-button"><i class="bi bi-trash-fill"></i></button>
-    <button id="edit" class="modal-button"><i class="bi bi-pencil-fill"></i></button>
+  </div>
+</div>
+
+<div id="editModal" class="modalEdit">
+  <div class="modal-content">
+    <span class="closeEdit">&times;</span>
+    <h1></h1>
+    <p>QuantidadeAA:</p>
+    <h2></h2>
+    <button id="confirm" class="modal-button"><i class="bi bi-check"></i></button>
   </div>
 </div>
 
