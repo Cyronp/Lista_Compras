@@ -1,56 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Compras</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Compras</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
+
 <body>
-<header>
+  <header>
     <h1>Lista de Compras</h1>
     <p>Organize seus itens facilmente!</p>
-</header>
+  </header>
 
-<main>
+  <main>
     <section class="fora">
       <input type="text" id="itens" placeholder="Adicione um item..." />
-      <input type="number" name="Quantidade" id="quantity">
+      <input type="number" name="Quantidade" placeholder="Adicione a quantidade..." id="quantity" min="0" max="50">
+
+
+      <label class="labelInput" >
+        <input type="file" id="imagem" accept="image/*"/>
+        <span>Imagem</span>
+      </label>
+
+
+
       <button id="adicionar">Adicionar</button>
     </section>
+
 
     <section class="fora">
       <ul id="lista">
 
       </ul>
     </section>
-</main>
+  </main>
 
-<div id="myModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h1></h1>
-    <p>Quantidade:</p>
-    <h2></h2>
-    <button id="removeItem" class="modal-button"><i class="bi bi-trash-fill"></i></button>
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h1></h1>
+      <p>Quantidade:</p>
+      <h2></h2>
+      <button id="removeItem" class="modal-button"><i class="bi bi-trash-fill"></i></button>
+    </div>
   </div>
-</div>
 
-<div id="editModal" class="modalEdit">
-  <div class="modal-content">
-    <span class="closeEdit">&times;</span>
-    <h1></h1>
-    <p>QuantidadeAA:</p>
-    <h2></h2>
-    <button id="confirm" class="modal-button"><i class="bi bi-check"></i></button>
+  <div id="editModal" class="modalEdit">
+    <div class="modal-content">
+      <span class="closeEdit">&times;</span>
+      <h1></h1>
+      <p>QuantidadeAA:</p>
+      <h2></h2>
+      <button id="confirm" class="modal-button"><i class="bi bi-check"></i></button>
+    </div>
   </div>
-</div>
 
-<footer>
+  <footer>
     <p>Organize seus itens facilmente!</p>
-</footer>
+  </footer>
 
-<script src="assets/js/script.js"></script>
+  <script src="assets/js/script.js"></script>
 </body>
+
 </html>

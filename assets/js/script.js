@@ -1,6 +1,7 @@
 // Seletores
 const itens = document.getElementById('itens');
 const totalquantidade = document.getElementById('quantity');
+const imagemInput = document.getElementById('imagem');  // Novo campo para a imagem
 const adicionar = document.getElementById('adicionar');
 const lista = document.getElementById('lista');
 const modal = document.getElementById('myModal');
@@ -11,32 +12,64 @@ const modalTitle = modal.querySelector('h1');
 const removeButton = document.getElementById('removeItem');
 const modalQuantity = modal.querySelector('p');
 
-
 let currentItem; // Item Atual
 
+// Função para converter a imagem em base64
+const convertImageToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);  // Lê o arquivo como uma URL base64
+  });
+};
+
 // Função para adicionar item na lista
-const addItem = () => {
+const addItem = async () => {
   const item = itens.value.trim();
   const quantidade = totalquantidade.value.trim(); 
+  const imagemFile = imagemInput.files[0];  // Pega a imagem do campo
 
   if (item === '') {
     alert('Por favor, insira um item válido!');
     return;
   }
 
+  if (quantidade < 0 || quantidade > 50) {
+    alert('Por favor, insira uma quantidade válida (entre 1 e 50)!');
+    return;
+  }
+
+  let imagemBase64 = '';
+  if (imagemFile) {
+    try {
+      imagemBase64 = await convertImageToBase64(imagemFile);  // Converte a imagem em base64
+    } catch (error) {
+      alert('Erro ao converter imagem!');
+      return;
+    }
+  }
+
+  // Envia os dados para o servidor
   fetch('http://localhost:3000/api/items', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ item, quantidade })
+    body: JSON.stringify({ item, quantidade, imagem: imagemBase64 })  // Envia a imagem base64
   })
   .then(response => response.json())
   .then(data => {
     const li = document.createElement('li');
-    li.innerHTML = `${data.item} <span>Quantidade:</span>${data.quantidade} <button onclick="openModal(this, ${data.id}, '${data.item}', ${data.quantidade}, '${data.createdAt}')"><i class="bi bi-arrow-90deg-left"></i></button>`;
+    li.innerHTML = `
+      ${data.item} <span>Quantidade:</span> ${data.quantidade} 
+      <img src="${data.imagem}" alt="${data.item}" style="width: 50px; height: 50px; object-fit: cover;">
+      <button onclick="openModal(this, ${data.id}, '${data.item}', ${data.quantidade}, '${data.createdAt}')">
+        <i class="bi bi-arrow-90deg-left"></i>
+      </button>`;
     lista.appendChild(li);
     itens.value = '';
+    imagemInput.value = '';  // Limpa o campo de imagem após o envio
   })
   .catch(error => console.error('Error:', error));
 };
@@ -49,13 +82,6 @@ const openModal = (button, id, itemName, quantidade) => {
   modalQuantity.textContent = `Quantidade: ${quantidade}`;
 };
 
-const openEditModal = (button, id, itemName, quantidade) => {
-  currentItem = { element: button.parentElement, id }; 
-  modalTitle.textContent = itemName;
-  Editmodal.style.display = 'block';
-  modalQuantity.textContent = `QuantidadeAA: ${quantidade}`;
-};
-
 // Função para fechar o modal
 span.onclick = () => {
   modal.style.display = 'none';
@@ -65,17 +91,6 @@ span.onclick = () => {
 window.onclick = (event) => {
   if (event.target == modal) {
     modal.style.display = 'none';
-  }
-};
-
-//confirmButton.onclick = () => {
-  //Editmodal.style.display = 'none';
-//};
-
-// Fechar o modal quando o usuário clicar fora dele
-window.onclick = (event) => {
-  if (event.target == modal) {
-    Editmodal.style.display = 'none';
   }
 };
 
@@ -99,7 +114,12 @@ const fetchItems = () => {
     .then(data => {
       data.forEach(item => {
         const li = document.createElement('li');
-        li.innerHTML = `${item.item} <span>Quantidade:</span>${item.quantidade} <button onclick="openModal(this, ${item.id}, '${item.item}', ${item.quantidade}, '${item.createdAt}')"><i class="bi bi-arrow-90deg-left"></i></button>`;
+        li.innerHTML = `
+          ${item.item} <span>Quantidade:</span> ${item.quantidade} 
+          <img src="${item.imagem}" alt="${item.item}" style="width: 50px; height: 50px; object-fit: cover;">
+          <button onclick="openModal(this, ${item.id}, '${item.item}', ${item.quantidade}, '${item.createdAt}')">
+            <i class="bi bi-arrow-90deg-left"></i>
+          </button>`;
         lista.appendChild(li);
       });
     })

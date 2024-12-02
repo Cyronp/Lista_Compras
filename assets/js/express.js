@@ -22,6 +22,7 @@ db.run(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     item TEXT NOT NULL,
     quantidade REAL CHECK(quantidade >= 0),
+    imagem TEXT,
     criadoEm TEXT DEFAULT CURRENT_TIMESTAMP
   )
 `, (err) => {
@@ -37,23 +38,25 @@ app.get('/api/items', (req, res) => {
     if (err) {
       res.status(500).json({ message: err.message });
     } else {
-      res.status(200).json(rows);
+      res.status(200).json(rows);  // Agora envia também a imagem base64
     }
   });
 });
 
+
 // Adicionar um item
 app.post('/api/items', (req, res) => {
-  const { item, quantidade } = req.body;
-  const query = `INSERT INTO items (item, quantidade) VALUES (?, ?)`;
-  db.run(query, [item, quantidade], function(err) {
+  const { item, quantidade, imagem } = req.body;  // Agora inclui imagem
+  const query = `INSERT INTO items (item, quantidade, imagem) VALUES (?, ?, ?)`;
+  db.run(query, [item, quantidade, imagem], function(err) {
     if (err) {
       res.status(500).json({ message: err.message });
     } else {
-      res.status(201).json({ id: this.lastID, item, quantidade });
+      res.status(201).json({ id: this.lastID, item, quantidade, imagem });
     }
   });
 });
+
 
 // Remover um item
 app.delete('/api/items/:id', (req, res) => {
