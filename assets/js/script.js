@@ -10,7 +10,11 @@ const span = document.getElementsByClassName('close')[0];
 const confirmButton = document.getElementsByClassName('closeEdit')[0];
 const modalTitle = modal.querySelector('h1');
 const removeButton = document.getElementById('removeItem');
-const modalQuantity = modal.querySelector('p');
+const modalQuantity = document.getElementById('modalQuantity');
+const atualizarItem = document.getElementById('attItem');
+const editItemName = document.getElementById('editItemName');
+const editItemQuantity = document.getElementById('editItemQuantity');
+const updateButton = document.getElementById('updateItem');
 
 let currentItem; // Item Atual
 
@@ -50,7 +54,6 @@ const addItem = async () => {
     }
   }
 
-  // Envia os dados para o servidor
   fetch('http://localhost:3000/api/items', {
     method: 'POST',
     headers: {
@@ -75,23 +78,53 @@ const addItem = async () => {
 };
 
 // Função para abrir o modal
-const openModal = (button, id, itemName, quantidade) => {
-  currentItem = { element: button.parentElement, id }; 
+const openModal = (button, id, itemName, quantity, createdAt) => {
+  currentItem = { element: button.parentElement, id }; // Store the current item
   modalTitle.textContent = itemName;
   modal.style.display = 'block';
-  modalQuantity.textContent = `Quantidade: ${quantidade}`;
+  modalQuantity.textContent = `Quantidade: ${quantity}`;
+  editItemName.value = itemName;
+  editItemQuantity.value = quantity;
 };
 
 // Função para fechar o modal
 span.onclick = () => {
   modal.style.display = 'none';
-};  
+};
 
 // Fechar o modal quando o usuário clicar fora dele
 window.onclick = (event) => {
   if (event.target == modal) {
     modal.style.display = 'none';
   }
+};
+
+// Função para atualizar item
+const patchItem = () => {
+  const updatedItem = editItemName.value.trim();
+  const updatedQuantity = editItemQuantity.value.trim();
+
+  if (updatedItem === '' || updatedQuantity === '') {
+    alert('Por favor, preencha todos os campos!');
+    return;
+  }
+
+  fetch(`http://localhost:3000/api/items/${currentItem.id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ item: updatedItem, quantidade: updatedQuantity })
+  })
+  
+  .then(response => response.json())
+  .then(data => {
+    currentItem.element.querySelector('span').textContent = `Quantidade: ${updatedQuantity}`;
+    currentItem.element.querySelector('button').setAttribute('onclick', `openModal(this, ${currentItem.id}, '${updatedItem}', ${updatedQuantity}, '${data.createdAt}')`);
+    modal.style.display = 'none';
+    window.location.reload()
+  })
+  .catch(error => console.error('Error:', error));
 };
 
 // Função para remover item
@@ -132,6 +165,7 @@ itens.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') addItem();
 });
 removeButton.addEventListener('click', removeItem);
+updateButton.addEventListener('click', patchItem);
 
 // Buscar e exibir itens ao carregar a página
 document.addEventListener('DOMContentLoaded', fetchItems);
