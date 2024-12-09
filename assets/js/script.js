@@ -142,7 +142,7 @@ const removeItem = () => {
 
 // Função para buscar e exibir itens
 const fetchItems = () => {
-  fetch('http://localhost:3000/api/items')
+  fetch(`http://localhost:3000/api/items`)
     .then(response => response.json())
     .then(data => {
       data.forEach(item => {

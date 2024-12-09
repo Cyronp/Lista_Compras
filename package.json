@@ -4,6 +4,7 @@
   "description": "Trabalho final do segundo semestre em desenvolvimento web, feito na faculdade univille em engenharia de software.",
   "main": "index.js",
   "scripts": {
+    "test": "node assets/js/express.js",
     "start": "node assets/js/express.js"
   },
   "keywords": [],

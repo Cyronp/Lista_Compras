@@ -237,3 +237,15 @@ label.labelInput input[type="file"] {
 .labelInput :valid + span {
   color: white;
 }
+
+#editItemName,
+#editItemQuantity {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#updateItem{
+  font-size: 1.5rem;
+}
